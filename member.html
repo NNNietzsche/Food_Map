@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>こなもんマップ 会员卡 💎</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: 'Noto Sans JP', sans-serif;
+      background: #f6f6f9;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+    }
+    .card {
+      width: 320px;
+      margin: 50px auto;
+      border-radius: 20px;
+      padding: 30px;
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      transition: 0.4s;
+    }
+    .lv1 { background: linear-gradient(135deg,#888,#ccc); }
+    .lv2 { background: linear-gradient(135deg,#c9a400,#ffdb4d); }
+    .lv3 { background: linear-gradient(135deg,#d62839,#ff7f50); }
+
+    .card h1 { margin: 0; font-size: 2em; }
+    .card p { margin: 10px 0; }
+    .progress-bar {
+      width: 80%;
+      height: 10px;
+      margin: 20px auto;
+      border-radius: 5px;
+      background: #ddd;
+      overflow: hidden;
+    }
+    .progress-inner {
+      height: 10px;
+      background: #00aaff;
+      width: 0;
+      transition: width 1s ease;
+    }
+    button {
+      background: #0095ff;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover { background: #007acc; }
+    .rights {
+      margin-top: 40px;
+      color: #555;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+<div id="member-card" class="card">
+  <h1>💎 会员卡</h1>
+  <p>等级加载中...</p>
+</div>
+
+<div class="rights">
+  <h3>会员特权说明</h3>
+  <p>Lv.1 → 全店 3% 折扣</p>
+  <p>Lv.2 → 全店 5% 折扣</p>
+  <p>Lv.3 → 全店 7% 折扣</p>
+  <button onclick="window.location.href='index.html'">🏠 返回地图</button>
+</div>
+
+<script>
+  function load(k,f){ try{ return JSON.parse(localStorage.getItem(k)) ?? f; }catch{ return f; } }
+  const pts = load('km_points_v1', 0);
+
+  let lv = 1, next = 200, discount = 3;
+  if (pts >= 500) { lv = 3; next = null; discount = 7; }
+  else if (pts >= 200) { lv = 2; next = 500; discount = 5; }
+
+  const diff = next ? next - pts : 0;
+  const card = document.getElementById('member-card');
+  card.classList.add('lv'+lv);
+
+  card.innerHTML = `
+  <h1>💎 等级 Lv.${lv}</h1>
+  <p>当前积分：<b>${pts}</b> 分</p>
+  <p>享受 <b>${discount}%</b> 折扣</p>
+  ${next ? `<p>距离下一级还差 <b>${diff}</b> 分</p>` : `<p>🏆 已达最高等级！</p>`}
+  <div class="progress-bar">
+    <div class="progress-inner" id="pg"></div>
+  </div>
+`;
+
+  const inner = document.getElementById('pg');
+  let ratio = 0;
+  if (lv === 1) ratio = pts / 200;
+  else if (lv === 2) ratio = (pts - 200) / 300;
+  else ratio = 1;
+  inner.style.width = Math.min(100, ratio * 100) + '%';
+</script>
+</body>
+</html>
