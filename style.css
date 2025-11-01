@@ -137,3 +137,62 @@ button.secondary{background:#fff; border:1px solid #ddd; color:#444}
     .action-row{flex-wrap:wrap}
     #locate-btn{right:16px; bottom:18px}
 }
+
+/****************************************************
+ * 📱 Mobile layout optimization
+ ****************************************************/
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 6px 10px;
+    }
+
+    .search-wrap input {
+        width: 100%;
+        font-size: 0.85rem;
+        padding: 6px 8px;
+    }
+
+    .header-actions {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    #map {
+        top: 100px; /* 减少header高度 */
+    }
+
+    #sidebar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        border-radius: 16px 16px 0 0;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+        padding: 10px;
+        max-height: 35vh; /* 原45vh -> 缩小为更低比例 */
+        overflow-y: scroll;
+        transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .shop-card {
+        margin: 6px 10px;
+        padding: 10px;
+        font-size: 0.85rem;
+        border-radius: 12px;
+    }
+
+    .locate-btn {
+        bottom: 80px;
+        right: 14px;
+        width: 46px;
+        height: 46px;
+    }
+}
