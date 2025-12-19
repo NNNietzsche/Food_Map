@@ -1,290 +1,394 @@
 /* =====================================================
-   基础 & 变量
+   基础设置
 ===================================================== */
-*{ box-sizing:border-box }
-
-:root{
-    --brand:#ff7043;
-    --brand2:#ff5252;
-    --glass:rgba(255,255,255,.85);
-
-    /* iOS Safe Area */
-    --safe-top: env(safe-area-inset-top);
-    --safe-bottom: env(safe-area-inset-bottom);
+* {
+  box-sizing: border-box;
 }
 
-html,body{
-    height:100%;
+:root {
+  --brand: #ff7043;
+  --brand2: #ff5252;
+  --glass: rgba(255, 255, 255, .85);
 }
 
-body{
-    margin:0;
-    font-family:'Noto Sans JP','Segoe UI',system-ui,-apple-system,sans-serif;
-    color:#333;
-    background:#fafafa;
+html, body {
+  height: 100%;
+}
 
-    /* ❗ iOS 必须 */
-    overflow:auto;
-    -webkit-overflow-scrolling:touch;
+body {
+  margin: 0;
+  font-family: 'Noto Sans JP', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: #333;
+  background: #fafafa;
+  overflow: hidden; /* 交互由子容器滚动 */
 }
 
 /* =====================================================
-   顶部栏
+   顶部栏 Header
 ===================================================== */
-header{
-    position:fixed;
-    top:0;
-    left:0;
-    right:0;
-    height:auto;
-    min-height:60px;
-    padding:8px 14px calc(6px + var(--safe-top));
-    display:flex;
-    flex-wrap:wrap;
-    align-items:center;
-    justify-content:space-between;
-    gap:6px;
+header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 64px;
+  padding: 8px 20px;
 
-    background:rgba(255,255,255,.75);
-    backdrop-filter:blur(12px);
-    border-bottom:1px solid rgba(0,0,0,.05);
-    z-index:1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: rgba(255, 255, 255, .75);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(0, 0, 0, .05);
+  z-index: 1000;
 }
 
-header h1{
-    margin:0;
-    font-size:1.2rem;
-    font-weight:700;
-    color:var(--brand);
+header h1 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--brand);
 }
 
-.search-wrap{
-    display:flex;
-    gap:8px;
-    align-items:center;
-    width:100%;
+.search-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.search-wrap input{
-    flex:1;
-    height:38px;
-    padding:0 12px;
-    border-radius:10px;
-    border:1px solid #ddd;
-    background:#fff;
-    font-size:.9rem;
-}
+.search-wrap input {
+  width: 36vw;
+  min-width: 220px;
+  max-width: 520px;
+  height: 38px;
+  padding: 0 12px;
 
-button{
-    cursor:pointer;
-    border:0;
-    border-radius:12px;
-    padding:8px 14px;
-    font-weight:600;
-}
-
-button.primary{
-    background:linear-gradient(135deg,var(--brand),var(--brand2));
-    color:#fff;
-}
-
-button.secondary{
-    background:#fff;
-    border:1px solid #ddd;
-    color:#444;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  background: #fff;
 }
 
 /* =====================================================
-   地图
+   按钮 Button
 ===================================================== */
-#map{
-    position:absolute;
-    top:calc(60px + var(--safe-top));
-    left:0;
-    right:0;
-    bottom:0;
-    z-index:1;
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-weight: 600;
 }
 
-.leaflet-bar a{
-    background:#fff;
-    border:none;
-    color:var(--brand);
+button.primary {
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+  color: #fff;
 }
 
-.leaflet-control{
-    filter:drop-shadow(0 2px 6px rgba(0,0,0,.12));
+button.secondary {
+  background: #fff;
+  border: 1px solid #ddd;
+  color: #444;
 }
 
 /* =====================================================
-   侧边栏 / Bottom Sheet
+   地图 Map（Leaflet）
 ===================================================== */
-#sidebar{
-    position:fixed;
-    right:16px;
-    top:76px;
-    width:360px;
-    max-height:calc(100vh - 120px);
-    overflow:auto;
-    padding:14px;
-
-    background:var(--glass);
-    backdrop-filter:blur(14px);
-    border-radius:18px;
-    box-shadow:0 6px 20px rgba(0,0,0,.10);
-    z-index:900;
+#map {
+  position: absolute;
+  inset: 64px 0 0 0; /* 让出顶部导航 */
+  z-index: 1;
 }
 
-#shop-list h3{
-    margin:6px 6px 10px;
-    font-size:.95rem;
-    color:#555;
+.leaflet-bar a {
+  background: #fff;
+  border: none;
+  color: var(--brand);
 }
 
-.shop-card{
-    background:#fff;
-    border-radius:14px;
-    padding:12px 14px;
-    margin-bottom:10px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
-    transition:.2s;
-}
-
-.shop-card:hover{
-    transform:translateY(-2px);
-    box-shadow:0 6px 14px rgba(0,0,0,.12);
-}
-
-.shop-meta{
-    color:#777;
-    font-size:.85rem;
-    margin:4px 0 6px;
-}
-
-.tag-pill{
-    display:inline-block;
-    font-size:.75rem;
-    margin:2px;
-    padding:2px 8px;
-    border-radius:999px;
-    background:#ffe0b2;
+.leaflet-control {
+  filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .12));
 }
 
 /* =====================================================
-   定位按钮（安全区适配）
+   侧边栏 Sidebar（附近店铺）
 ===================================================== */
-#locate-btn{
-    position:fixed;
-    right:16px;
-    bottom:calc(16px + var(--safe-bottom));
-    width:56px;
-    height:56px;
-    border-radius:50%;
-    background:linear-gradient(135deg,var(--brand),var(--brand2));
-    color:#fff;
-    font-size:22px;
-    box-shadow:0 10px 26px rgba(255,82,82,.35);
-    z-index:1100;
+#sidebar {
+  position: fixed;
+  top: 76px;
+  right: 16px;
+
+  width: 360px;
+  max-height: calc(100vh - 110px);
+  padding: 14px;
+  overflow: auto;
+
+  background: var(--glass);
+  backdrop-filter: blur(14px);
+  border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .10);
+  z-index: 900;
+}
+
+#shop-list h3 {
+  margin: 6px 6px 10px;
+  font-size: .95rem;
+  color: #555;
+}
+
+.panel {
+  width: 100%;
+}
+
+.shop-card {
+  margin-bottom: 10px;
+  padding: 12px 14px;
+
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.shop-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .12);
+}
+
+.shop-card b {
+  font-weight: 700;
+}
+
+.shop-meta {
+  margin: 4px 0 6px;
+  font-size: .85rem;
+  color: #777;
+}
+
+.tag-pill {
+  display: inline-block;
+  margin: 2px;
+  padding: 2px 8px;
+
+  font-size: .78rem;
+  border-radius: 999px;
+  background: #ffe0b2;
+  color: #333;
+}
+
+/* =====================================================
+   定位悬浮按钮
+===================================================== */
+#locate-btn {
+  position: fixed;
+  right: 22px;
+  bottom: 26px;
+
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+
+  background: linear-gradient(135deg, var(--brand), var(--brand2));
+  color: #fff;
+  font-size: 22px;
+
+  box-shadow: 0 10px 26px rgba(255, 82, 82, .35);
+  z-index: 1100;
 }
 
 /* =====================================================
    店铺详情 Bottom Sheet
 ===================================================== */
-#shop-detail{
-    position:fixed;
-    left:50%;
-    bottom:0;
-    transform:translate(-50%,110%);
-    width:94%;
-    max-width:520px;
+#shop-detail {
+  position: fixed;
+  left: 50%;
+  bottom: 0;
 
-    background:rgba(255,255,255,.96);
-    backdrop-filter:blur(18px);
-    border-radius:22px 22px 0 0;
+  width: 94%;
+  max-width: 520px;
+  padding: 18px 20px 20px;
 
-    padding:18px 20px calc(20px + var(--safe-bottom));
-    box-shadow:0 -12px 28px rgba(0,0,0,.18);
+  transform: translate(-50%, 110%);
+  background: rgba(255, 255, 255, .96);
+  backdrop-filter: blur(18px);
+  border-radius: 22px 22px 0 0;
 
-    transition:transform .32s cubic-bezier(.25,.8,.25,1);
-    z-index:1200;
+  box-shadow: 0 -12px 28px rgba(0, 0, 0, .18);
+  transition: transform .32s cubic-bezier(.25, .8, .25, 1);
+  z-index: 1200;
 }
 
-#shop-detail.slide-up{
-    transform:translate(-50%,0);
+#shop-detail.slide-up {
+  transform: translate(-50%, 0);
 }
 
-.hidden{
-    display:none !important;
+#shop-detail.slide-down {
+  transform: translate(-50%, 110%);
 }
 
-.detail-title{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+.hidden {
+  display: none !important;
 }
 
-.close-btn{
-    width:36px;
-    height:36px;
-    border-radius:12px;
-    background:#fff;
-    border:1px solid #eee;
+.detail-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-.action-row{
-    margin-top:14px;
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    justify-content:center;
+.detail-title h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+
+  background: #fff;
+  border: 1px solid #eee;
+  color: #666;
+}
+
+.detail-section {
+  margin-top: 12px;
+  font-size: .95rem;
+  line-height: 1.55;
+}
+
+.detail-section h4 {
+  margin: 0 0 6px;
+  color: var(--brand);
+}
+
+.action-row {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
 }
 
 /* =====================================================
-   Toast
+   Toast 提示
 ===================================================== */
-.toast{
-    position:fixed;
-    left:50%;
-    bottom:calc(24px + var(--safe-bottom));
-    transform:translateX(-50%);
-    padding:10px 16px;
-    background:rgba(30,30,30,.85);
-    color:#fff;
-    border-radius:12px;
-    opacity:0;
-    transition:.3s;
-    z-index:1400;
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 26px;
+
+  transform: translateX(-50%) translateY(16px);
+  padding: 10px 16px;
+
+  background: rgba(30, 30, 30, .85);
+  color: #fff;
+  font-size: .9rem;
+
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .25);
+  opacity: 0;
+
+  transition: all .32s ease;
+  z-index: 1400;
 }
 
-.toast.show{
-    opacity:1;
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
 }
 
 /* =====================================================
-   📱 Mobile 专用优化
+   响应式：Tablet / Mobile
 ===================================================== */
-@media (max-width:768px){
+@media (max-width: 900px) {
+  .search-wrap input {
+    width: 48vw;
+  }
 
-    #sidebar{
-        left:0;
-        right:0;
-        bottom:calc(64px + var(--safe-bottom));
-        top:auto;
-        width:100%;
-        max-height:32vh;
-        border-radius:16px 16px 0 0;
-        padding:10px 12px;
-    }
+  #sidebar {
+    right: 10px;
+    width: 320px;
+  }
+}
 
-    .shop-card{
-        margin:6px 8px;
-        padding:10px;
-        font-size:.85rem;
-    }
+@media (max-width: 680px) {
+  header {
+    height: 60px;
+  }
 
-    #locate-btn{
-        width:48px;
-        height:48px;
-        font-size:20px;
-    }
+  #map {
+    inset: 60px 0 0 0;
+  }
+
+  #sidebar {
+    top: auto;
+    bottom: 86px;
+    right: 10px;
+
+    width: min(88vw, 300px);
+    max-height: 40vh;
+    padding: 10px 10px 12px;
+  }
+
+  .shop-card {
+    padding: 10px 12px;
+  }
+
+  .tag-pill {
+    font-size: .72rem;
+  }
+
+  .action-row {
+    flex-wrap: wrap;
+  }
+
+  #locate-btn {
+    right: 16px;
+    bottom: 18px;
+  }
+}
+
+/* =====================================================
+   Mobile 优化（Bottom Sheet 风格）
+===================================================== */
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 6px 10px;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    font-size: .85rem;
+    padding: 6px 8px;
+  }
+
+  #map {
+    top: 100px;
+  }
+
+  #sidebar {
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    width: 100%;
+    max-height: 35vh;
+    padding: 10px;
+
+    border-radius: 16px 16px 0 0;
+    background: rgba(255, 255, 255, .95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, .15);
+
+    overflow-y: scroll;
+  }
+
+  .shop-card {
+    margin: 6px 10px;
+    padding: 10px;
+    font-size: .85rem;
+    border-radius: 12px;
+  }
 }
