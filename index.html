@@ -1,98 +1,53 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport"
-        content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>外食マップ</title>
-
-  <!-- Leaflet -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  />
-
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8" />
+    <title>外食マップ  Final++ Premium UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
 </head>
-<body>
 
-<!-- ===== ヘッダー ===== -->
+<body>
+<!-- ==== 顶部导航 ==== -->
 <header>
-  <h1>外食マップ</h1>
-  <div class="search-wrap">
-    <input type="text" placeholder="店名・メニュー・タグで検索…" />
-    <button class="secondary">検索</button>
-  </div>
+    <h1>外食マップ</h1>
+
+    <div class="search-wrap">
+        <input id="search-input" type="text" placeholder="店名・メニュー・タグで検索..." />
+        <button id="search-btn" class="secondary">検索</button>
+    </div>
+
+    <div class="header-actions">
+        <button class="secondary" onclick="window.location.href='favorites.html'">❤ 收藏</button>
+        <button class="primary" onclick="window.location.href='checkin.html'">打卡店铺</button>
+        <button class="secondary" onclick="window.location.href='member.html'">💎 会员卡 lv.1</button>
+    </div>
 </header>
 
-<!-- ===== マップ ===== -->
-<div id="map"></div>
+<!-- ==== 主体区域 ==== -->
+<main>
+    <div id="map"></div>
 
-<!-- ===== 店舗一覧（Bottom Sheet） ===== -->
-<div id="sidebar">
-  <h3>📍 近くのお店</h3>
+    <aside id="sidebar">
+        <section id="shop-list" class="panel"></section>
+        <section id="shop-detail" class="panel hidden">
+            <div id="detail-content"></div>
+        </section>
+    </aside>
+</main>
 
-  <div class="shop-card">
-    <b>たこ焼き 太郎</b>
-    <div class="shop-meta">徒歩3分・★4.5</div>
-    <div>
-      <span class="tag-pill">たこ焼き</span>
-      <span class="tag-pill">地元人気</span>
-    </div>
-  </div>
+<footer>
+    <small>© Konamon Map Final++ Premium • Leaflet + OpenStreetMap</small>
+</footer>
 
-  <div class="shop-card">
-    <b>お好み焼き 花</b>
-    <div class="shop-meta">徒歩5分・★4.2</div>
-    <div>
-      <span class="tag-pill">お好み焼き</span>
-      <span class="tag-pill">学生に人気</span>
-    </div>
-  </div>
-</div>
-
-<!-- ===== 店舗詳細（Bottom Sheet） ===== -->
-<div id="shop-detail" class="hidden">
-  <div class="detail-title">
-    <h2>たこ焼き 太郎</h2>
-    <button class="close-btn" onclick="closeDetail()">×</button>
-  </div>
-
-  <div class="detail-section">
-    <h4>🗣 ユーザー評価</h4>
-    <p><b>Nana</b>：地元の人が並ぶだけある味。</p>
-    <p><b>Kou</b>：マヨ好きにはたまらない。</p>
-  </div>
-
-  <div class="detail-section">
-    <h4>🎉 キャンペーン</h4>
-    <p>🔥 平日17〜19時はポイント2倍</p>
-  </div>
-
-  <div class="action-row">
-    <button class="primary">🏆 チェックイン（+5分）</button>
-    <button class="secondary">⭐ お気に入り</button>
-  </div>
-</div>
-
-<!-- ===== 現在地ボタン ===== -->
-<button id="locate-btn">📍</button>
-
-<!-- Leaflet -->
+<!-- ==== JS加载 ==== -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="shops.js"></script>
+<script src="script.js"></script>
 
-<script>
-  // 地図初期化（仮）
-  const map = L.map('map').setView([34.6937, 135.5023], 16);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap'
-  }).addTo(map);
-
-  function closeDetail() {
-    document.getElementById('shop-detail').classList.add('hidden');
-    document.getElementById('sidebar').classList.remove('hidden');
-  }
-</script>
-
+<!-- 返回当前位置悬浮按钮 -->
+<button class="locate-btn" id="locate-btn" title="返回当前位置">⌖</button>
+<script src="mobile-optimize.js"></script>
 </body>
 </html>
