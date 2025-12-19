@@ -8,7 +8,6 @@
     --brand2:#ff5252;
     --glass:rgba(255,255,255,.85);
 
-    /* iOS Safe Area */
     --safe-top: env(safe-area-inset-top);
     --safe-bottom: env(safe-area-inset-bottom);
 }
@@ -23,7 +22,7 @@ body{
     color:#333;
     background:#fafafa;
 
-    /* ❗ iOS 必须 */
+    /* iOS 滚动稳定 */
     overflow:auto;
     -webkit-overflow-scrolling:touch;
 }
@@ -36,14 +35,11 @@ header{
     top:0;
     left:0;
     right:0;
-    height:auto;
-    min-height:60px;
     padding:8px 14px calc(6px + var(--safe-top));
     display:flex;
     flex-wrap:wrap;
     align-items:center;
-    justify-content:space-between;
-    gap:6px;
+    gap:8px;
 
     background:rgba(255,255,255,.75);
     backdrop-filter:blur(12px);
@@ -61,7 +57,6 @@ header h1{
 .search-wrap{
     display:flex;
     gap:8px;
-    align-items:center;
     width:100%;
 }
 
@@ -71,27 +66,6 @@ header h1{
     padding:0 12px;
     border-radius:10px;
     border:1px solid #ddd;
-    background:#fff;
-    font-size:.9rem;
-}
-
-button{
-    cursor:pointer;
-    border:0;
-    border-radius:12px;
-    padding:8px 14px;
-    font-weight:600;
-}
-
-button.primary{
-    background:linear-gradient(135deg,var(--brand),var(--brand2));
-    color:#fff;
-}
-
-button.secondary{
-    background:#fff;
-    border:1px solid #ddd;
-    color:#444;
 }
 
 /* =====================================================
@@ -106,18 +80,12 @@ button.secondary{
     z-index:1;
 }
 
-.leaflet-bar a{
-    background:#fff;
-    border:none;
-    color:var(--brand);
-}
-
 .leaflet-control{
     filter:drop-shadow(0 2px 6px rgba(0,0,0,.12));
 }
 
 /* =====================================================
-   侧边栏 / Bottom Sheet
+   Sidebar（列表）
 ===================================================== */
 #sidebar{
     position:fixed;
@@ -131,14 +99,8 @@ button.secondary{
     background:var(--glass);
     backdrop-filter:blur(14px);
     border-radius:18px;
-    box-shadow:0 6px 20px rgba(0,0,0,.10);
+    box-shadow:0 6px 20px rgba(0,0,0,.1);
     z-index:900;
-}
-
-#shop-list h3{
-    margin:6px 6px 10px;
-    font-size:.95rem;
-    color:#555;
 }
 
 .shop-card{
@@ -147,18 +109,6 @@ button.secondary{
     padding:12px 14px;
     margin-bottom:10px;
     box-shadow:0 2px 8px rgba(0,0,0,.08);
-    transition:.2s;
-}
-
-.shop-card:hover{
-    transform:translateY(-2px);
-    box-shadow:0 6px 14px rgba(0,0,0,.12);
-}
-
-.shop-meta{
-    color:#777;
-    font-size:.85rem;
-    margin:4px 0 6px;
 }
 
 .tag-pill{
@@ -171,7 +121,7 @@ button.secondary{
 }
 
 /* =====================================================
-   定位按钮（安全区适配）
+   定位按钮
 ===================================================== */
 #locate-btn{
     position:fixed;
@@ -188,7 +138,7 @@ button.secondary{
 }
 
 /* =====================================================
-   店铺详情 Bottom Sheet
+   ⭐ 详情 Bottom Sheet（重点修复区域）
 ===================================================== */
 #shop-detail{
     position:fixed;
@@ -198,13 +148,15 @@ button.secondary{
     width:94%;
     max-width:520px;
 
+    /* ⭐ 关键 */
+    max-height:80vh;
+    display:flex;
+    flex-direction:column;
+
     background:rgba(255,255,255,.96);
     backdrop-filter:blur(18px);
     border-radius:22px 22px 0 0;
-
-    padding:18px 20px calc(20px + var(--safe-bottom));
     box-shadow:0 -12px 28px rgba(0,0,0,.18);
-
     transition:transform .32s cubic-bezier(.25,.8,.25,1);
     z-index:1200;
 }
@@ -213,30 +165,46 @@ button.secondary{
     transform:translate(-50%,0);
 }
 
-.hidden{
-    display:none !important;
-}
-
+/* 顶部标题（固定） */
 .detail-title{
     display:flex;
-    justify-content:space-between;
     align-items:center;
+    justify-content:space-between;
+    padding:14px 18px;
+    border-bottom:1px solid #eee;
 }
 
-.close-btn{
-    width:36px;
-    height:36px;
-    border-radius:12px;
-    background:#fff;
-    border:1px solid #eee;
+.detail-title h2{
+    margin:0;
+    font-size:1.1rem;
 }
 
+/* ===============================
+   ⭐ 可滚动内容区（真正解决问题）
+=============================== */
+.detail-scroll{
+    flex:1;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+
+    padding:14px 18px calc(20px + var(--safe-bottom));
+}
+
+/* 内容区标题 */
+.detail-scroll h4{
+    margin:12px 0 6px;
+    color:var(--brand);
+    font-size:.95rem;
+}
+
+/* 底部按钮（固定） */
 .action-row{
-    margin-top:14px;
     display:flex;
     gap:10px;
-    flex-wrap:wrap;
+    padding:12px 16px calc(12px + var(--safe-bottom));
+    border-top:1px solid #eee;
     justify-content:center;
+    background:#fff;
 }
 
 /* =====================================================
@@ -256,35 +224,24 @@ button.secondary{
     z-index:1400;
 }
 
-.toast.show{
-    opacity:1;
-}
+.toast.show{ opacity:1 }
 
 /* =====================================================
-   📱 Mobile 专用优化
+   Mobile 优化
 ===================================================== */
 @media (max-width:768px){
-
     #sidebar{
         left:0;
         right:0;
-        bottom:calc(64px + var(--safe-bottom));
         top:auto;
+        bottom:calc(64px + var(--safe-bottom));
         width:100%;
         max-height:32vh;
         border-radius:16px 16px 0 0;
-        padding:10px 12px;
-    }
-
-    .shop-card{
-        margin:6px 8px;
-        padding:10px;
-        font-size:.85rem;
     }
 
     #locate-btn{
         width:48px;
         height:48px;
-        font-size:20px;
     }
 }
