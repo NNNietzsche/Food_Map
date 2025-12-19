@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>打卡実績</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f7f9fc;
+      padding: 20px;
+    }
+    #achievements-container {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    h1 {
+      color: var(--orange-color);
+      text-align: center;
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    .achievement-card {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .achievement-card h2 {
+      font-size: 20px;
+      margin: 0;
+      color: #555;
+    }
+    .achievement-card .count {
+      font-size: 36px;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    .achievement-card.consecutive .count { color: var(--green-color); }
+    .achievement-card.total .count { color: var(--purple-color); }
+    .achievement-card.points .count { color: var(--orange-color); }
+    .back-link {
+      display: block;
+      margin-top: 20px;
+      text-align: center;
+      font-size: 16px;
+      text-decoration: none;
+      color: var(--primary-color);
+      transition: transform 0.2s;
+    }
+    .back-link:hover {
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+<body>
+<div id="achievements-container">
+  <h1>あなたの打卡実績</h1>
+
+  <div class="achievement-card consecutive">
+    <div>
+      <h2>連続チェックイン日数</h2>
+    </div>
+    <div class="count" id="consecutive-days">0</div>
+  </div>
+
+  <div class="achievement-card total">
+    <div>
+      <h2>総チェックイン数</h2>
+    </div>
+    <div class="count" id="total-checkins">0</div>
+  </div>
+
+  <div class="achievement-card points">
+    <div>
+      <h2>合計ポイント</h2>
+    </div>
+    <div class="count" id="total-points">0</div>
+  </div>
+
+  <a href="index.html" class="back-link">マップに戻る</a>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const checkInHistory = JSON.parse(localStorage.getItem('checkInHistory')) || [];
+    const totalPoints = localStorage.getItem('userPoints') || 0;
+
+    document.getElementById('total-checkins').textContent = checkInHistory.length;
+    document.getElementById('total-points').textContent = totalPoints;
+
+    let consecutiveDays = 0;
+    if (checkInHistory.length > 0) {
+      const dates = [...new Set(checkInHistory.map(item => item.date))].sort();
+      let currentConsecutive = 1;
+      let maxConsecutive = 1;
+
+      if (dates.length > 0) {
+        const today = new Date().toISOString().split('T')[0];
+        const lastDate = dates[dates.length - 1];
+        const lastDateObj = new Date(lastDate);
+        const yesterdayObj = new Date();
+        yesterdayObj.setDate(yesterdayObj.getDate() - 1);
+        const yesterday = yesterdayObj.toISOString().split('T')[0];
+
+        if (lastDate === today || lastDate === yesterday) {
+          // 从最后一次打卡日期开始往前计算
+          for (let i = dates.length - 1; i > 0; i--) {
+            const prevDate = new Date(dates[i - 1]);
+            const currDate = new Date(dates[i]);
+            const dayDiff = (currDate.getTime() - prevDate.getTime()) / (1000 * 3600 * 24);
+            if (Math.round(dayDiff) === 1) {
+              currentConsecutive++;
+            } else {
+              break;
+            }
+          }
+        } else {
+          currentConsecutive = 0;
+        }
+      }
+      consecutiveDays = currentConsecutive;
+    }
+
+    document.getElementById('consecutive-days').textContent = consecutiveDays;
+  });
+</script>
+</body>
+</html>

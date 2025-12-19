@@ -1,0 +1,290 @@
+/* =====================================================
+   基础 & 变量
+===================================================== */
+*{ box-sizing:border-box }
+
+:root{
+    --brand:#ff7043;
+    --brand2:#ff5252;
+    --glass:rgba(255,255,255,.85);
+
+    /* iOS Safe Area */
+    --safe-top: env(safe-area-inset-top);
+    --safe-bottom: env(safe-area-inset-bottom);
+}
+
+html,body{
+    height:100%;
+}
+
+body{
+    margin:0;
+    font-family:'Noto Sans JP','Segoe UI',system-ui,-apple-system,sans-serif;
+    color:#333;
+    background:#fafafa;
+
+    /* ❗ iOS 必须 */
+    overflow:auto;
+    -webkit-overflow-scrolling:touch;
+}
+
+/* =====================================================
+   顶部栏
+===================================================== */
+header{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    height:auto;
+    min-height:60px;
+    padding:8px 14px calc(6px + var(--safe-top));
+    display:flex;
+    flex-wrap:wrap;
+    align-items:center;
+    justify-content:space-between;
+    gap:6px;
+
+    background:rgba(255,255,255,.75);
+    backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(0,0,0,.05);
+    z-index:1000;
+}
+
+header h1{
+    margin:0;
+    font-size:1.2rem;
+    font-weight:700;
+    color:var(--brand);
+}
+
+.search-wrap{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    width:100%;
+}
+
+.search-wrap input{
+    flex:1;
+    height:38px;
+    padding:0 12px;
+    border-radius:10px;
+    border:1px solid #ddd;
+    background:#fff;
+    font-size:.9rem;
+}
+
+button{
+    cursor:pointer;
+    border:0;
+    border-radius:12px;
+    padding:8px 14px;
+    font-weight:600;
+}
+
+button.primary{
+    background:linear-gradient(135deg,var(--brand),var(--brand2));
+    color:#fff;
+}
+
+button.secondary{
+    background:#fff;
+    border:1px solid #ddd;
+    color:#444;
+}
+
+/* =====================================================
+   地图
+===================================================== */
+#map{
+    position:absolute;
+    top:calc(60px + var(--safe-top));
+    left:0;
+    right:0;
+    bottom:0;
+    z-index:1;
+}
+
+.leaflet-bar a{
+    background:#fff;
+    border:none;
+    color:var(--brand);
+}
+
+.leaflet-control{
+    filter:drop-shadow(0 2px 6px rgba(0,0,0,.12));
+}
+
+/* =====================================================
+   侧边栏 / Bottom Sheet
+===================================================== */
+#sidebar{
+    position:fixed;
+    right:16px;
+    top:76px;
+    width:360px;
+    max-height:calc(100vh - 120px);
+    overflow:auto;
+    padding:14px;
+
+    background:var(--glass);
+    backdrop-filter:blur(14px);
+    border-radius:18px;
+    box-shadow:0 6px 20px rgba(0,0,0,.10);
+    z-index:900;
+}
+
+#shop-list h3{
+    margin:6px 6px 10px;
+    font-size:.95rem;
+    color:#555;
+}
+
+.shop-card{
+    background:#fff;
+    border-radius:14px;
+    padding:12px 14px;
+    margin-bottom:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+    transition:.2s;
+}
+
+.shop-card:hover{
+    transform:translateY(-2px);
+    box-shadow:0 6px 14px rgba(0,0,0,.12);
+}
+
+.shop-meta{
+    color:#777;
+    font-size:.85rem;
+    margin:4px 0 6px;
+}
+
+.tag-pill{
+    display:inline-block;
+    font-size:.75rem;
+    margin:2px;
+    padding:2px 8px;
+    border-radius:999px;
+    background:#ffe0b2;
+}
+
+/* =====================================================
+   定位按钮（安全区适配）
+===================================================== */
+#locate-btn{
+    position:fixed;
+    right:16px;
+    bottom:calc(16px + var(--safe-bottom));
+    width:56px;
+    height:56px;
+    border-radius:50%;
+    background:linear-gradient(135deg,var(--brand),var(--brand2));
+    color:#fff;
+    font-size:22px;
+    box-shadow:0 10px 26px rgba(255,82,82,.35);
+    z-index:1100;
+}
+
+/* =====================================================
+   店铺详情 Bottom Sheet
+===================================================== */
+#shop-detail{
+    position:fixed;
+    left:50%;
+    bottom:0;
+    transform:translate(-50%,110%);
+    width:94%;
+    max-width:520px;
+
+    background:rgba(255,255,255,.96);
+    backdrop-filter:blur(18px);
+    border-radius:22px 22px 0 0;
+
+    padding:18px 20px calc(20px + var(--safe-bottom));
+    box-shadow:0 -12px 28px rgba(0,0,0,.18);
+
+    transition:transform .32s cubic-bezier(.25,.8,.25,1);
+    z-index:1200;
+}
+
+#shop-detail.slide-up{
+    transform:translate(-50%,0);
+}
+
+.hidden{
+    display:none !important;
+}
+
+.detail-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.close-btn{
+    width:36px;
+    height:36px;
+    border-radius:12px;
+    background:#fff;
+    border:1px solid #eee;
+}
+
+.action-row{
+    margin-top:14px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    justify-content:center;
+}
+
+/* =====================================================
+   Toast
+===================================================== */
+.toast{
+    position:fixed;
+    left:50%;
+    bottom:calc(24px + var(--safe-bottom));
+    transform:translateX(-50%);
+    padding:10px 16px;
+    background:rgba(30,30,30,.85);
+    color:#fff;
+    border-radius:12px;
+    opacity:0;
+    transition:.3s;
+    z-index:1400;
+}
+
+.toast.show{
+    opacity:1;
+}
+
+/* =====================================================
+   📱 Mobile 专用优化
+===================================================== */
+@media (max-width:768px){
+
+    #sidebar{
+        left:0;
+        right:0;
+        bottom:calc(64px + var(--safe-bottom));
+        top:auto;
+        width:100%;
+        max-height:32vh;
+        border-radius:16px 16px 0 0;
+        padding:10px 12px;
+    }
+
+    .shop-card{
+        margin:6px 8px;
+        padding:10px;
+        font-size:.85rem;
+    }
+
+    #locate-btn{
+        width:48px;
+        height:48px;
+        font-size:20px;
+    }
+}

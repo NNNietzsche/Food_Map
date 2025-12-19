@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <title>外食マップ  Final++ Premium UI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+<!-- ==== 顶部导航 ==== -->
+<header>
+    <h1>外食マップ</h1>
+
+    <div class="search-wrap">
+        <input id="search-input" type="text" placeholder="店名・メニュー・タグで検索..." />
+        <button id="search-btn" class="secondary">検索</button>
+    </div>
+
+    <div class="header-actions">
+        <button class="secondary" onclick="window.location.href='favorites.html'">❤ 收藏</button>
+        <button class="primary" onclick="window.location.href='checkin.html'">打卡店铺</button>
+        <button class="secondary" onclick="window.location.href='member.html'">💎 会员卡 lv.1</button>
+    </div>
+</header>
+
+<!-- ==== 主体区域 ==== -->
+<main>
+    <div id="map"></div>
+
+    <aside id="sidebar">
+        <section id="shop-list" class="panel"></section>
+        <section id="shop-detail" class="panel hidden">
+            <div id="detail-content"></div>
+        </section>
+    </aside>
+</main>
+
+<footer>
+    <small>© Konamon Map Final++ Premium • Leaflet + OpenStreetMap</small>
+</footer>
+
+<!-- ==== JS加载 ==== -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="shops.js"></script>
+<script src="script.js"></script>
+
+<!-- 返回当前位置悬浮按钮 -->
+<button class="locate-btn" id="locate-btn" title="返回当前位置">⌖</button>
+<script src="mobile-optimize.js"></script>
+</body>
+</html>

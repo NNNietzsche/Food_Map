@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>打卡任务中心 • Konamon Map Final++</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body.checkin-new {
+      font-family: "Noto Sans JP", sans-serif;
+      margin: 0;
+      background: #f8f6f4;
+      color: #333;
+    }
+    header.checkin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: #ffb47a;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .level-wrap { flex: 1; }
+    .level-title { font-size: 1.1rem; margin-bottom: 6px; }
+    .level-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .level-bar-fill {
+      height: 8px;
+      background: linear-gradient(90deg,#fff,#ffe2b3);
+      transition: width 1s ease;
+    }
+    .level-meta {
+      font-size: 0.9rem;
+      display: flex;
+      justify-content: space-between;
+      opacity: 0.9;
+    }
+    .header-actions button {
+      margin-left: 10px;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+    .primary { background:#fff; color:#ff7b00; font-weight:600; }
+    .secondary { background:rgba(255,255,255,0.2); color:#fff; }
+    main.checkin-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .checkin-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      padding: 20px;
+      transition: transform 0.2s ease;
+    }
+    .checkin-card:hover { transform: translateY(-4px); }
+    .checkin-card h2 { margin-top: 0; display:flex; align-items:center; gap:6px; }
+    .muted { color:#999; font-size:0.9rem; }
+    .task-card {
+      background:#fff8f2;
+      border-radius:14px;
+      margin:10px 0;
+      padding:14px 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .task-header { display:flex; justify-content:space-between; align-items:center; }
+    .task-title { font-weight:600; }
+    .task-status {
+      font-size:0.8rem;
+      padding:4px 8px;
+      border-radius:8px;
+    }
+    .task-status.doing { background:#fff2e0; color:#ff7b00; }
+    .task-status.done { background:#e6f8ec; color:#2bb673; }
+    .progress-bar {
+      height:6px;
+      background:#eee;
+      border-radius:6px;
+      overflow:hidden;
+      margin-top:8px;
+    }
+    .progress-fill {
+      height:100%;
+      background:linear-gradient(90deg,#ff9b42,#ffb67a);
+      border-radius:6px;
+      transition:width 1s ease;
+    }
+    .progress-fill.done { background:linear-gradient(90deg,#37b24d,#8ce99a); }
+    .task-footer { margin-top:4px; font-size:0.85rem; color:#777; }
+    .reward { color:#ff8a3c; font-weight:600; }
+
+    .badge-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(100px,1fr));
+      gap:12px;
+      margin-top:10px;
+    }
+    .badge {
+      text-align:center;
+      border-radius:12px;
+      background:#fff8f2;
+      padding:10px;
+      box-shadow:0 1px 3px rgba(0,0,0,0.1);
+    }
+    footer.checkin-footer {
+      text-align:center;
+      padding:10px;
+      color:#aaa;
+    }
+  </style>
+</head>
+<body class="checkin-new">
+
+<header class="checkin-header">
+  <div class="level-wrap">
+    <div class="level-title">💎 等级 <b id="level">Lv.1</b></div>
+    <div class="level-bar">
+      <div class="level-bar-fill" id="level-bar-fill" style="width:0%"></div>
+    </div>
+    <div class="level-meta">
+      <span>总积分 <b id="points">0</b></span>
+      <span>距下一等级还差 <b id="points-to-next">0</b> 分</span>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="secondary" onclick="window.location.href='index.html'">← 返回地图</button>
+    <button class="primary" onclick="window.location.href='member.html'">💎 会员卡</button>
+  </div>
+</header>
+
+<main class="checkin-container">
+  <section class="checkin-card" id="today-card">
+    <h2>📅 今日任务 <small id="today-summary" class="muted"></small></h2>
+    <div id="daily-list"></div>
+    <div class="hint muted">提示：前往地图页任意店铺进行打卡。</div>
+  </section>
+
+  <section class="checkin-card" id="long-card">
+    <h2>🎯 连续与长期任务</h2>
+    <div id="longterm-list"></div>
+  </section>
+
+  <section class="checkin-card" id="achieve-card">
+    <h2>🏅 成就徽章</h2>
+    <div id="achievements" class="badge-grid"></div>
+    <h2 style="margin-top:14px;">🗓 打卡记录</h2>
+    <ul id="checkin-log" class="log-list"></ul>
+  </section>
+</main>
+
+<footer class="checkin-footer">
+  <small>© Konamon Map Final++</small>
+</footer>
+
+<script>
+  function load(k,f){ try{ return JSON.parse(localStorage.getItem(k)) ?? f; }catch{ return f; } }
+  function save(k,v){ localStorage.setItem(k,JSON.stringify(v)); }
+  const points = load('km_points_v1',0);
+  let lv=1,next=200;
+  if(points>=500){lv=3;next=null;}
+  else if(points>=200){lv=2;next=500;}
+  document.getElementById('level').textContent='Lv.'+lv;
+  document.getElementById('points').textContent=points;
+  document.getElementById('points-to-next').textContent=next?next-points:'MAX';
+  document.getElementById('level-bar-fill').style.width = lv===1?(points/200*100)+'%':lv===2?((points-200)/300*100)+'%':'100%';
+
+  // ✅ 今日任务
+  const dailyTasks=[
+    {title:'今日打卡任意店铺',progress:1,total:1,reward:'+5分',done:true},
+    {title:'浏览 10 家店铺',progress:6,total:10,reward:'+1分',done:false}
+  ];
+  const dailyDiv=document.getElementById('daily-list');
+  dailyTasks.forEach(t=>{
+    const p=Math.min(t.progress/t.total*100,100);
+    dailyDiv.innerHTML+=`
+  <div class="task-card">
+    <div class="task-header">
+      <span class="task-title">${t.title}</span>
+      <span class="task-status ${t.done?'done':'doing'}">${t.done?'已完成':'进行中'}</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill ${t.done?'done':''}" style="width:${p}%;"></div></div>
+    <div class="task-footer">${t.progress}/${t.total} · <span class="reward">${t.reward}</span></div>
+  </div>`;
+  });
+
+  // ✅ 长期任务
+  const longTasks=[
+    {title:'连续 7 天每日打卡',progress:3,total:7,reward:'+50分'},
+    {title:'累计打卡 20 天',progress:5,total:20,reward:'+10分'},
+    {title:'累计打卡 50 天',progress:5,total:50,reward:'+30分'},
+    {title:'累计收藏 10 家',progress:2,total:10,reward:'+5分'}
+  ];
+  const longDiv=document.getElementById('longterm-list');
+  longTasks.forEach(t=>{
+    const p=Math.min(t.progress/t.total*100,100);
+    longDiv.innerHTML+=`
+  <div class="task-card">
+    <div class="task-header">
+      <span class="task-title">${t.title}</span>
+      <span class="task-status ${p>=100?'done':'doing'}">${p>=100?'已完成':'进行中'}</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill ${p>=100?'done':''}" style="width:${p}%;"></div></div>
+    <div class="task-footer">${t.progress}/${t.total} · <span class="reward">${t.reward}</span></div>
+  </div>`;
+  });
+
+  // ✅ 成就徽章示例
+  const badges=[
+    {name:'坚持之星',desc:'连续打卡7天',icon:'🌟'},
+    {name:'收藏达人',desc:'收藏10家店铺',icon:'🏆'}
+  ];
+  const badgeDiv=document.getElementById('achievements');
+  badges.forEach(b=>{
+    badgeDiv.innerHTML+=`
+  <div class="badge">
+    <div class="icon" style="font-size:1.6em">${b.icon}</div>
+    <div>${b.name}</div>
+    <small class="muted">${b.desc}</small>
+  </div>`;
+  });
+</script>
+</body>
+</html>
